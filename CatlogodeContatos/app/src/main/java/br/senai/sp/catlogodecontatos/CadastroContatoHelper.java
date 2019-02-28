@@ -1,7 +1,9 @@
 package br.senai.sp.catlogodecontatos;
 
+import android.content.ClipData;
 import android.support.design.widget.TextInputLayout;
 import android.text.InputType;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.Toast;
@@ -20,6 +22,7 @@ public class CadastroContatoHelper {
     private TextInputLayout layoutTxtTelefone;
     private TextInputLayout layoutTxtEmail;
     private TextInputLayout layoutTxtEnderecoLinkedin;
+    private MenuItem menu_del;
 
     private Contato contato;
 
@@ -36,6 +39,7 @@ public class CadastroContatoHelper {
          layoutTxtEmail = activity.findViewById(R.id.layout_txt_email);
          layoutTxtEnderecoLinkedin = activity.findViewById(R.id.layout_txt_endereco_linkedin);
          contato = new Contato();
+         //menu_del = activity.findViewById(R.id.menu_del);
 
     }
 
@@ -75,16 +79,6 @@ public class CadastroContatoHelper {
         else{
             layoutTxtEmail.setErrorEnabled(false);
         }
-        if(txtEnderecoLinkedin.getText().toString().isEmpty()){
-            layoutTxtEnderecoLinkedin.setErrorEnabled(true);
-            layoutTxtEnderecoLinkedin.setError("Por favor digite o linkedin");
-            validado = false;
-        }
-        else{
-            layoutTxtEnderecoLinkedin.setErrorEnabled(false);
-        }
-
-
 
 
         return validado;

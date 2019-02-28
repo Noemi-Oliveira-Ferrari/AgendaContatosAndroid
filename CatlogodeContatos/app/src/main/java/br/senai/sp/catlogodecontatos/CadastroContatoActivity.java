@@ -1,8 +1,12 @@
 package br.senai.sp.catlogodecontatos;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.Toast;
 
 import br.senai.sp.dao.ContatoDAO;
@@ -26,10 +31,11 @@ public class CadastroContatoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastro_contato);
 
+
         /*BOTAO DE VOLTAR A TELA PRINCIPAL*/
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setTitle("Contatos");
+       // getSupportActionBar().setHomeButtonEnabled(true);
+       // getSupportActionBar().setTitle("Contatos");
 
         helper = new CadastroContatoHelper(CadastroContatoActivity.this);
 
@@ -45,6 +51,10 @@ public class CadastroContatoActivity extends AppCompatActivity {
     }
 
 
+
+
+
+
     /*Colocar menu na activity(menu_cadastro_contatos.xmlml)*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -55,7 +65,6 @@ public class CadastroContatoActivity extends AppCompatActivity {
         /*Retorna o menu pra quem chamou*/
         return super.onCreateOptionsMenu(menu);
     }
-
 
 
     /*Retorna o item selecionado no menu*/
@@ -73,6 +82,7 @@ public class CadastroContatoActivity extends AppCompatActivity {
                     CadastroContatoHelper helper = new CadastroContatoHelper(this);
                     if(helper.validar() == true){
                         dao.salvar(contato);
+
                         Toast.makeText(this, contato.getNome() + " gravado com sucesso!", Toast.LENGTH_LONG).show();
                         finish();
 
@@ -96,21 +106,26 @@ public class CadastroContatoActivity extends AppCompatActivity {
                dao.close();
                break;
            case R.id.menu_del:
+               Contato contatoCancelar = helper.getContato();
 
-               final ContatoDAO daoExcluir = new ContatoDAO(this);
-               final Contato contatoExcluir = helper.getContato();
-                       new AlertDialog.Builder(this).setTitle("Excluir contato").setMessage("Tem certeza que deseja excluir o contato?").setPositiveButton("Sim",
-                               new DialogInterface.OnClickListener() {
-                                   @Override
-                                   public void onClick(DialogInterface dialogInterface, int i) {
-                                       daoExcluir.excluir(contatoExcluir);
+               if(contatoCancelar.getId() == 0){
+                   Toast.makeText(this, "Nenhum contato adicionado!", Toast.LENGTH_LONG).show();
+               }else {
 
-                                       Toast.makeText(CadastroContatoActivity.this, contatoExcluir.getNome() + " excluído!", Toast.LENGTH_LONG).show();
-                                       daoExcluir.close();
-                                       finish();
-                                   }
-                               }).setNegativeButton("Não", null).show();
+                   final ContatoDAO daoExcluir = new ContatoDAO(this);
+                   final Contato contatoExcluir = helper.getContato();
+                   new AlertDialog.Builder(this).setTitle("Excluir contato").setMessage("Tem certeza que deseja excluir o contato?").setPositiveButton("Sim",
+                           new DialogInterface.OnClickListener() {
+                               @Override
+                               public void onClick(DialogInterface dialogInterface, int i) {
+                                   daoExcluir.excluir(contatoExcluir);
 
+                                   Toast.makeText(CadastroContatoActivity.this, contatoExcluir.getNome() + " excluído!", Toast.LENGTH_LONG).show();
+                                   daoExcluir.close();
+                                   finish();
+                               }
+                           }).setNegativeButton("Não", null).show();
+               }
                break;
            case R.id.menu_configuracoes:
                Toast.makeText(CadastroContatoActivity.this, "Configurações", Toast.LENGTH_LONG).show();
@@ -120,8 +135,7 @@ public class CadastroContatoActivity extends AppCompatActivity {
                    break;
            case android.R.id.home:
                /*CHAMADA DA MAIN QUANDO CLICA NO BOTÃO DE VOLTAR*/
-               startActivity(new Intent(this, MainActivity.class));
-               finishAffinity();
+               finish();
                break;
        }
 
