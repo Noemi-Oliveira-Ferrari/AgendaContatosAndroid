@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -34,17 +35,17 @@ public class MainActivity extends AppCompatActivity {
    private ListView listaContatos;
    private ImageButton btnNovoContato;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         //*** Associa o objeto ListView à View ListView do layout xml
         listaContatos = findViewById(R.id.list_contatos);
 
         btnNovoContato = findViewById(R.id.bt_novo_contato);
+
 
         //*** Ação do botão novo
         btnNovoContato.setOnClickListener(new View.OnClickListener() {
@@ -53,8 +54,10 @@ public class MainActivity extends AppCompatActivity {
                 Intent cadastroContato = new Intent(MainActivity.this,CadastroContatoActivity.class);
                 startActivity(cadastroContato);
 
+
             }
         });
+
 
         // Definição de um menu de contexto para a listview(lista de filmes)
 
@@ -76,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+
 
 
 

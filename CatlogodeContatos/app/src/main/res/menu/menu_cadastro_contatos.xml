@@ -13,8 +13,8 @@
         android:icon="@drawable/ic_salvar"
         app:showAsAction="always"/>
     <item
-        android:id="@+id/menu_configuracoes"
-        android:title="Configurações" />
+        android:id="@+id/menu_ligar"
+        android:title="Ligar" />
 
 
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="br.senai.sp.catlogodecontatos">
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -23,6 +24,10 @@
         <activity android:name="br.senai.sp.catlogodecontatos.CadastroContatoActivity">
 
         </activity>
+
+
     </application>
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
 
 </manifest>

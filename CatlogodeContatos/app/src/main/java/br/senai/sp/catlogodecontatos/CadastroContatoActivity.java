@@ -2,11 +2,14 @@ package br.senai.sp.catlogodecontatos;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,8 +17,11 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import br.senai.sp.dao.ContatoDAO;
@@ -52,9 +58,6 @@ public class CadastroContatoActivity extends AppCompatActivity {
 
 
 
-
-
-
     /*Colocar menu na activity(menu_cadastro_contatos.xmlml)*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -64,6 +67,36 @@ public class CadastroContatoActivity extends AppCompatActivity {
         menuInflater.inflate(R.menu.menu_cadastro_contatos, menu);
         /*Retorna o menu pra quem chamou*/
         return super.onCreateOptionsMenu(menu);
+    }
+
+
+/*Notificação*/
+    public void criarNotificacaoSimples(){
+        int id = 1;
+        String titulo = "Agenda de Contatos";
+        String texto = "Um contato foi adicionado à sua lista!";
+        int icone = android.R.drawable.ic_dialog_info;
+
+        Intent intent = new Intent(this, MainActivity.class);
+        PendingIntent p = getPendingIntent(id, intent, this);
+
+        NotificationCompat.Builder notificacao = new NotificationCompat.Builder(this);
+        notificacao.setSmallIcon(icone);
+        notificacao.setContentTitle(titulo);
+        notificacao.setContentText(texto);
+        notificacao.setContentIntent(p);
+
+        NotificationManagerCompat nm = NotificationManagerCompat.from(this);
+        nm.notify(id, notificacao.build());
+    }
+
+    private PendingIntent getPendingIntent(int id, Intent intent, Context context){
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        stackBuilder.addParentStack(intent.getComponent());
+        stackBuilder.addNextIntent(intent);
+
+        PendingIntent p = stackBuilder.getPendingIntent(id, PendingIntent.FLAG_UPDATE_CURRENT);
+        return p;
     }
 
 
@@ -82,7 +115,7 @@ public class CadastroContatoActivity extends AppCompatActivity {
                     CadastroContatoHelper helper = new CadastroContatoHelper(this);
                     if(helper.validar() == true){
                         dao.salvar(contato);
-
+                        criarNotificacaoSimples();
                         Toast.makeText(this, contato.getNome() + " gravado com sucesso!", Toast.LENGTH_LONG).show();
                         finish();
 
@@ -127,8 +160,19 @@ public class CadastroContatoActivity extends AppCompatActivity {
                            }).setNegativeButton("Não", null).show();
                }
                break;
-           case R.id.menu_configuracoes:
-               Toast.makeText(CadastroContatoActivity.this, "Configurações", Toast.LENGTH_LONG).show();
+           case R.id.menu_ligar:
+
+               Contato contatoLigar = helper.getContato();
+
+               if(contatoLigar.getId() == 0){
+                   Toast.makeText(this, "Não é possível ligar!", Toast.LENGTH_LONG).show();
+               }else {
+
+                   Contato numeroTelefone = helper.getContato();
+                   Uri uri = Uri.parse("tel:" + numeroTelefone.getTelefone());
+                   Intent intent = new Intent(Intent.ACTION_DIAL, uri);
+                   startActivity(intent);
+               }
                break;
                default:
                    Toast.makeText(CadastroContatoActivity.this, "Nada", Toast.LENGTH_LONG).show();
@@ -142,4 +186,6 @@ public class CadastroContatoActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }
