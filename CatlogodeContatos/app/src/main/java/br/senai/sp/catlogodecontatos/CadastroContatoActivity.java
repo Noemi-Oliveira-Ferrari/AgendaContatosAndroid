@@ -174,13 +174,14 @@ public class CadastroContatoActivity extends AppCompatActivity {
                    startActivity(intent);
                }
                break;
-               default:
-                   Toast.makeText(CadastroContatoActivity.this, "Nada", Toast.LENGTH_LONG).show();
-                   break;
            case android.R.id.home:
                /*CHAMADA DA MAIN QUANDO CLICA NO BOTÃO DE VOLTAR*/
                finish();
                break;
+           default:
+                   Toast.makeText(CadastroContatoActivity.this, "Nada", Toast.LENGTH_LONG).show();
+                   break;
+
        }
 
 
